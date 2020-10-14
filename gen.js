@@ -9,7 +9,7 @@ const Shell = require('node-powershell');
 const username = process.argv[2];
 const password = process.argv[3];
 const runscript = process.argv[4];
-const domain = process.argv[5];
+const domain = '@' + process.argv[5];
 const importFiles = ['StudentEnrollment.csv', 'TeacherRoster.csv', 'Section.csv', 'Student.csv', 'Teacher.csv'];
 
 
