@@ -12,11 +12,11 @@ $ npm run start
 
 # Scripts
 
-  - add_users - parse csv from export folder, create new user accounts and enroll users to groups
+  - add_users - parse csv from export folder, create new user accounts and enroll users to groups or unroll existing user from all groups then enroll to new from csv
   - purge_calendar - Delete all meetings from calendar
   - addClasses - parse csv from export folder and create new groups
 
-# CSV for import markdown:
+# CSV for import markdown (from librus export):
 #### BOLD ARE REQUIRED FIELDS
 
 ### Student.csv
@@ -36,8 +36,6 @@ $ npm run start
 
 ### Todos
 
- - Test script in production enviroment
- - check if users exists, then unroll from all groups and add new groups
  - check if group exists and purge canals
 
 License
