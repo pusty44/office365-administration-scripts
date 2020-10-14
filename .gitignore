@@ -1,4 +1,4 @@
 ./import
 ./export
 ./node_modules
-/idea
+/.idea
