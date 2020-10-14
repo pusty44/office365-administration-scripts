@@ -37,6 +37,7 @@ $ node gen.js username password script domain
  - Test script in production enviroment
  - clean code
  - check if users exists, then unroll from all groups and add new groups
+ - check if group exists and purge canals
 
 License
 ----
