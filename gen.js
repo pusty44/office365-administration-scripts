@@ -266,7 +266,7 @@ try {
         fs.unlinkSync(path.resolve('export','text.txt'));
     }
 
-    ps.addCommand(path.resolve('scripts',runscript + '.ps1') + ' ' + username + ' '+ password);
+    ps.addCommand(path.resolve('scripts',runscript + '.ps1') + ' ' + username + ' '+ password + ' ' + domain);
     ps.invoke()
         .then(output => {
             console.log(output);
