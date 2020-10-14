@@ -1,13 +1,14 @@
-# OFFICE365 administrator tools from schools using librus.pl
+# Move data from LIBRUS to OFFICE365
+Script helps school administrator to copy all classes and users to office365 environment
+
+# USAGE
+1. edit config.js with valid login, password and domain to Microsoft Azure AD.
+2. change runscript to one in scripts folder (without .ps1)
 
 to run script use command:
 ```sh
-$ node gen.js username password script domain
+$ npm run start
 ```
-  - username - MS AD login
-  - password - MS AD password
-  - script - script name form ./scripts (without .ps1)
-  - domain - your microsoft domain e.g. example.com
 
 # Scripts
 
@@ -35,7 +36,6 @@ $ node gen.js username password script domain
 ### Todos
 
  - Test script in production enviroment
- - clean code
  - check if users exists, then unroll from all groups and add new groups
  - check if group exists and purge canals
 
