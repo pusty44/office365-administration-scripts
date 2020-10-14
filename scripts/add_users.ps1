@@ -34,8 +34,8 @@ ForEach($user in $csv){
 	$UPN = $user.surname + '.' + $user.name + $domain
     $MailNickName = $user.Name + ' ' + $user.Surname
 
-	$check = Get-AzureADUser -ObjectId $user.surname+'.'+$user.name+$domain
-	if($check){
+	$UserCheck = Get-MsolUser -UserPrincipalName $UPN -ErrorAction SilentlyContinue
+	if($UserCheck -ne $Null){
 	#USER EXISTS
 	#TODO add user enrollment purge then enroll to new groups
 	
