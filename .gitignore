@@ -1,4 +1,5 @@
-./import
-./export
-./node_modules
-/.idea
+node_modules
+import
+.DS_Store
+.idea
+export
