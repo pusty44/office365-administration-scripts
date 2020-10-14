@@ -12,8 +12,9 @@ $ npm run start
 
 # Scripts
 
-  - add_users - parse csv from import folder and create new user accounts, new groups and enroll users to groups
+  - add_users - parse csv from export folder, create new user accounts and enroll users to groups
   - purge_calendar - Delete all meetings from calendar
+  - addClasses - parse csv from export folder and create new groups
 
 # CSV for import markdown:
 #### BOLD ARE REQUIRED FIELDS
