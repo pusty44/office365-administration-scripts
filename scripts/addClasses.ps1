@@ -32,12 +32,29 @@ $csv | Format-Table
 ForEach($group in $csv){
     $alias = $group.alias+$domain
     $check = Get-UnifiedGroup -Identity $alias
-    if($check){
-        #do nothing
+    $GroupID = Get-UnifiedGroup $alias | select -expand ExternalDirectoryObjectId
+    $TeamCheck = "0"
+    $TeamCheck = Get-Team -GroupID $GroupID
+
+    if($check -ne $Null){
+        #Write-Host `n "The group" $Group.name "-" $GroupAddress  "exists in Azure AD" -ForegroundColor Green
+        If ($TeamCheck -ne "0") {
+            #Write-Host "A team was detected for" $Group.Alias -ForegroundColor Green                                                                   }
+        } else {
+            #Write-Host "A team was not detected for" $Group.Alias -ForegroundColor Red
+            New-Team -Group $GroupID
+            #Write-Host "Created a new team for" $Group.name -ForegroundColor Green
+        }
+
     } else {
         #create new group
-    	New-UnifiedGroup -DisplayName $group.name -Alias $group.alias -EmailAddresses $alias -AccessType Private
-    	Write-Host 'Added group '+$group.name
+    	#Write-Host `n "The group" $group.name "does not exist." -ForegroundColor Red
+        #Write-Host "Need to create" $Group.name "-" $GroupAddress -ForegroundColor Cyan
+        New-UnifiedGroup -DisplayName $group.name -Alias $alias -AccessType Private
+        Start-Sleep -seconds 2
+        #Write-Host "Added group " $Group.name "-" $GroupAddress -ForegroundColor Green
+        Start-Sleep -seconds 2
+        New-Team -Group $GroupID
+        #Write-Host "Created a new team for" $Group.name -ForegroundColor Green
     }
-
 }

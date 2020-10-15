@@ -137,10 +137,11 @@ function Remove-UserFromAllGroups {
 } 
 
 
-
+## STUDENTS
 #read csv
 $csv = Import-Csv -Path .\export\Students.csv -Delimiter ','
 $csv | Format-Table
+$License1 = "STANDARDWOFFPACK_STUDENT"
 ForEach($user in $csv){
 	$DisplayName = $user.name + ' ' + $user.surname
 	$UPN = $user.surname + '.' + $user.name + $domain
@@ -150,16 +151,17 @@ ForEach($user in $csv){
 	if($UserCheck -ne $Null){
 	#USER EXISTS
         if (($PSBoundParameters | measure).count) {
-        Remove-UserFromAllGroups @PSBoundParameters -Identity $UPN -IncludeOffice365Groups:$true
+            Remove-UserFromAllGroups @PSBoundParameters -Identity $UPN -IncludeOffice365Groups:$true
         }  else {
-        Write-Host "INFO: The script was run without parameters, consider dot-sourcing it instead." -ForegroundColor Cyan
+            Write-Host "INFO: The script was run without parameters, consider dot-sourcing it instead." -ForegroundColor Cyan
         }
 
 	} else {
 	#USER DOESN'T EXIST
         #$PasswordProfile=New-Object -TypeName Microsoft.Open.AzureAD.Model.PasswordProfile
         #$PasswordProfile.Password=$defaultPassword
-        New-AzureADUser -DisplayName $DisplayName -GivenName $user.name -SurName $user.urname -UserPrincipalName $UPN -UsageLocation "Pl" -MailNickName $MailNickName -PasswordProfile $user.password -AccountEnabled $True
+        New-AzureADUser -DisplayName $DisplayName -GivenName $user.name -SurName $user.surname -UserPrincipalName $UPN -UsageLocation "Pl" -MailNickName $MailNickName -PasswordProfile $user.password -AccountEnabled $True
+        Set-MsolUserLicense -UserPrincipalName $UPN -Addlicenses $License1
         Write-Host 'Added user '+$user.name+' '+$user.surname
 	}
 }
@@ -178,3 +180,44 @@ ForEach($user in $csv){
 }
 
 
+## TEACHERS
+#read csv
+$csv = Import-Csv -Path .\export\Teachers.csv -Delimiter ','
+$csv | Format-Table
+$License2 = "STANDARDWOFFPACK_FACULTY"
+ForEach($user in $csv){
+	$DisplayName = $user.name + ' ' + $user.surname
+	$UPN = $user.surname + '.' + $user.name + $domain
+    $MailNickName = $user.name + ' ' + $user.surname
+
+	$UserCheck = Get-MsolUser -UserPrincipalName $UPN -ErrorAction SilentlyContinue
+	if($UserCheck -ne $Null){
+	#USER EXISTS
+        if (($PSBoundParameters | measure).count) {
+            Remove-UserFromAllGroups @PSBoundParameters -Identity $UPN -IncludeOffice365Groups:$true
+        }  else {
+            Write-Host "INFO: The script was run without parameters, consider dot-sourcing it instead." -ForegroundColor Cyan
+        }
+
+	} else {
+	#USER DOESN'T EXIST
+        #$PasswordProfile=New-Object -TypeName Microsoft.Open.AzureAD.Model.PasswordProfile
+        #$PasswordProfile.Password=$defaultPassword
+        New-AzureADUser -DisplayName $DisplayName -GivenName $user.name -SurName $user.surname -UserPrincipalName $UPN -UsageLocation "Pl" -MailNickName $MailNickName -PasswordProfile $user.password -AccountEnabled $True
+        Set-MsolUserLicense -UserPrincipalName $UPN -Addlicenses $License2
+        Write-Host 'Added user '+$user.name+' '+$user.surname
+	}
+}
+#give a minute for M$ to process users
+Start-Sleep -seconds 90
+
+#Enroll users
+ForEach($user in $csv){
+    $groups = $user.groups.Split("*")
+    $user = $user.surname + '.' + $user.name + $domain
+    ForEach($group in groups){
+        $gp = $group + $domain
+        Add-UnifiedGroupLinks –Identity $gp –LinkType "Members" –Links $user
+        Write-Host "Added user" $user "to group:" $gp
+    }
+}
